@@ -36,9 +36,9 @@ st.title('🧚‍♀️ Lilien')
 
 col1, col2 = st.columns(2)
 with col1:
-    version = st.selectbox("系統提示選單", list(st.session_state.system.keys()))
+    version = st.selectbox("系統提示", list(st.session_state.system.keys()))
 with col2:
-    model = st.selectbox("模型選單", ['gpt-4o-mini', 'gpt-4o', 'o3-mini'])
+    model = st.selectbox("語言模型", ['gpt-4o-mini', 'gpt-4o', 'o3-mini'])
 
 system_prompt = st.session_state.system[version]
 notes = 'Notes from the user:\n' + st.session_state.notes
