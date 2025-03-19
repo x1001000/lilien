@@ -22,8 +22,13 @@ def keep_notes(note):
 
 # Create session state variables
 if 'client' not in st.session_state:
-    st.session_state.client = OpenAI()
+    st.session_state.client = OpenAI()        
     st.session_state.messages = []
+    r = requests.get(os.getenv('CHAT_LOG_URL'))
+    for row in r.json()['data']:
+        st.session_state.messages.append({"role": "system", "content": row['timestamp']})
+        st.session_state.messages.append({"role": "user", "content": row['userMessage']})
+        st.session_state.messages.append({"role": "assistant", "content": row['assistantMessage']})
     st.session_state.system = {}
     for line in requests.get(os.getenv('SYSTEM_PROMPT_URL')).text.split('\n'):
         if '更新日期'  in line:
@@ -92,3 +97,9 @@ if user_prompt := st.chat_input("你說 我聽"):
     with st.chat_message("assistant", avatar='🧚‍♀️'):
         response = st.write_stream(stream)
     st.session_state.messages.append({"role": "assistant", "content": response})
+    payload = {
+        "timestamp": current_time,
+        "userMessage": user_prompt,
+        "assistantMessage": response
+        }
+    requests.post(os.getenv('CHAT_LOG_URL'), json=payload)
