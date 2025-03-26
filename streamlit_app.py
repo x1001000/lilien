@@ -55,7 +55,7 @@ print(notes)
 for message in st.session_state.messages:
     if message["role"] == "system":
         current_time = message["content"]
-        st.html(f'<p align="right">{current_time[11:-6]}</p>')
+        st.html(f'<p align="right">{current_time[2:-6].replace("-", "/").replace("T", " ")}</p>')
         continue
     with st.chat_message(message["role"], avatar=None if message["role"] == "user" else '🧚‍♀️'):
         st.markdown(message["content"])
@@ -67,7 +67,7 @@ if user_prompt := st.chat_input("你說 我聽"):
     # Store and display the current_time
     current_time = datetime.now(tz).replace(microsecond=0).isoformat()
     st.session_state.messages.append({"role": "system", "content": current_time})
-    st.html(f'<p align="right">{current_time[11:-6]}</p>')
+    st.html(f'<p align="right">{current_time[2:-6].replace("-", "/").replace("T", " ")}</p>')
     # Store and display the current user_prompt.
     st.session_state.messages.append({"role": "user", "content": user_prompt})
     with st.chat_message("user"):
