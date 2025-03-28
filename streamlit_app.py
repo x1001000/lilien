@@ -24,7 +24,7 @@ def keep_notes(note):
 if 'client' not in st.session_state:
     st.session_state.client = OpenAI()        
     st.session_state.messages = []
-    r = requests.get(os.getenv('CHAT_LOG_URL'))
+    r = requests.get(os.getenv('MEMORY_API'))
     for row in r.json()['data']:
         st.session_state.messages.append({"role": "system", "content": row['timestamp']})
         st.session_state.messages.append({"role": "user", "content": row['userMessage']})
@@ -102,4 +102,4 @@ if user_prompt := st.chat_input("你說 我聽"):
         "userMessage": user_prompt,
         "assistantMessage": response
         }
-    requests.post(os.getenv('CHAT_LOG_URL'), json=payload)
+    requests.post(os.getenv('MEMORY_API'), json=payload)
